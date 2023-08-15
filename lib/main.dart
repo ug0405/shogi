@@ -366,6 +366,10 @@ class _BoardState extends State<Board> {
         }
         break;
       case ShogiPieceType.kinsho:
+      case ShogiPieceType.promotedHohei:
+      case ShogiPieceType.promotedKyousya:
+      case ShogiPieceType.promotedKeima:
+      case ShogiPieceType.promotedGinsho:
         // 前方斜め左に移動可能
         int newRow = row + (1 * direction);
         int newCol = col - 1;
@@ -457,6 +461,74 @@ class _BoardState extends State<Board> {
           }
         }
         break;
+      case ShogiPieceType.promotedKakugyo:
+        // 左上方向
+        for (int i = 1; row - i >= 0 && col - i >= 0; i++) {
+          if (isValidMove(row - i, col - i, piece)) {
+            candidateMoves.add([row - i, col - i]);
+            if (shogiBoard[row - i][col - i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 右上方向
+        for (int i = 1; row - i >= 0 && col + i < cols; i++) {
+          if (isValidMove(row - i, col + i, piece)) {
+            candidateMoves.add([row - i, col + i]);
+            if (shogiBoard[row - i][col + i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 左下方向
+        for (int i = 1; row + i < rows && col - i >= 0; i++) {
+          if (isValidMove(row + i, col - i, piece)) {
+            candidateMoves.add([row + i, col - i]);
+            if (shogiBoard[row + i][col - i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 右下方向
+        for (int i = 1; row + i < rows && col + i < cols; i++) {
+          if (isValidMove(row + i, col + i, piece)) {
+            candidateMoves.add([row + i, col + i]);
+            if (shogiBoard[row + i][col + i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+        // 上方向
+        if (isValidMove(row - 1, col, piece)) {
+          candidateMoves.add([row - 1, col]);
+        }
+
+        // 下方向
+        if (isValidMove(row + 1, col, piece)) {
+          candidateMoves.add([row + 1, col]);
+        }
+
+        // 左方向
+        if (isValidMove(row, col - 1, piece)) {
+          candidateMoves.add([row, col - 1]);
+        }
+
+        // 右方向
+        if (isValidMove(row, col + 1, piece)) {
+          candidateMoves.add([row, col + 1]);
+        }
+        break;
       case ShogiPieceType.hisya:
         // 上方向
         for (int i = row - 1; i >= 0; i--) {
@@ -504,6 +576,69 @@ class _BoardState extends State<Board> {
           } else {
             break;
           }
+        }
+        break;
+      case ShogiPieceType.promotedHisya: // 成り飛車の動き // 成り飛車の動き
+        // 飛車の上方向
+        for (int i = row - 1; i >= 0; i--) {
+          if (isValidMove(i, col, piece)) {
+            candidateMoves.add([i, col]);
+            if (shogiBoard[i][col] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 飛車の下方向
+        for (int i = row + 1; i < rows; i++) {
+          if (isValidMove(i, col, piece)) {
+            candidateMoves.add([i, col]);
+            if (shogiBoard[i][col] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 飛車の左方向
+        for (int i = col - 1; i >= 0; i--) {
+          if (isValidMove(row, i, piece)) {
+            candidateMoves.add([row, i]);
+            if (shogiBoard[row][i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 飛車の右方向
+        for (int i = col + 1; i < cols; i++) {
+          if (isValidMove(row, i, piece)) {
+            candidateMoves.add([row, i]);
+            if (shogiBoard[row][i] != null) {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        // 成り飛車の斜めに1マスだけ移動
+        if (isValidMove(row - 1, col - 1, piece)) {
+          candidateMoves.add([row - 1, col - 1]);
+        }
+        if (isValidMove(row - 1, col + 1, piece)) {
+          candidateMoves.add([row - 1, col + 1]);
+        }
+        if (isValidMove(row + 1, col - 1, piece)) {
+          candidateMoves.add([row + 1, col - 1]);
+        }
+        if (isValidMove(row + 1, col + 1, piece)) {
+          candidateMoves.add([row + 1, col + 1]);
         }
         break;
       case ShogiPieceType.ousho:
@@ -582,8 +717,14 @@ class _BoardState extends State<Board> {
     // ハイライトされている場合のみ移動を許可
     if (piece != null && isHighlightedMove) {
 // 成るかどうかの条件判定
-      if (toRow <= 2 && !piece.canPromote) {
-        // 自分の駒が0から2行目に入った場合、成りの選択肢を表示
+      if ((toRow <= 2 && piece.isAlly || toRow >= 6 && !piece.isAlly) &&
+          !piece.canPromote &&
+          (piece.type == ShogiPieceType.hohei ||
+              piece.type == ShogiPieceType.kyousya ||
+              piece.type == ShogiPieceType.keima ||
+              piece.type == ShogiPieceType.ginsho ||
+              piece.type == ShogiPieceType.kakugyo ||
+              piece.type == ShogiPieceType.hisya)) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
