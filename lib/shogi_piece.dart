@@ -21,11 +21,13 @@ class ShogiPiece {
   final String imageUrl;
   final bool isAlly;
   final ShogiPieceType type;
+  final bool canPromote; // 成りの条件を表すフラグ
 
   ShogiPiece({
     required this.name,
     required this.imageUrl,
     this.isAlly = true,
     required this.type,
+    this.canPromote = false,
   });
 }

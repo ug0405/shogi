@@ -223,7 +223,7 @@ class _BoardState extends State<Board> {
           type: ShogiPieceType.kyousya),
       ShogiPiece(
           name: '桂馬',
-          imageUrl: 'assets/image/kyousya.png',
+          imageUrl: 'assets/image/keima.png',
           isAlly: true,
           type: ShogiPieceType.keima),
       ShogiPiece(
@@ -581,8 +581,64 @@ class _BoardState extends State<Board> {
 
     // ハイライトされている場合のみ移動を許可
     if (piece != null && isHighlightedMove) {
-      shogiBoard[toRow][toCol] = piece;
-      shogiBoard[fromRow][fromCol] = null;
+// 成るかどうかの条件判定
+      if (toRow <= 2 && !piece.canPromote) {
+        // 自分の駒が0から2行目に入った場合、成りの選択肢を表示
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('成りますか？'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('はい'),
+                  onPressed: () {
+                    shogiBoard[toRow][toCol] = ShogiPiece(
+                      name: piece.name,
+                      imageUrl: getPromotedPieceURL(piece.imageUrl),
+                      isAlly: piece.isAlly,
+                      type: getPromotedPieceType(piece.type),
+                    );
+
+                    shogiBoard[fromRow][fromCol] = null;
+                    Navigator.of(context).pop();
+                    setState(() {
+                      isPieceSelected = false;
+                      selectedRow = -1;
+                      selectedCol = -1;
+                      moveRange = [];
+                    });
+                  },
+                ),
+                TextButton(
+                  child: Text('いいえ'),
+                  onPressed: () {
+                    shogiBoard[toRow][toCol] = piece;
+                    shogiBoard[fromRow][fromCol] = null;
+                    Navigator.of(context).pop();
+                    setState(() {
+                      isPieceSelected = false;
+                      selectedRow = -1;
+                      selectedCol = -1;
+                      moveRange = [];
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // 成らない場合は通常の駒の移動処理
+        shogiBoard[toRow][toCol] = piece;
+        shogiBoard[fromRow][fromCol] = null;
+        setState(() {
+          isPieceSelected = false;
+          selectedRow = -1;
+          selectedCol = -1;
+          moveRange = [];
+        });
+      }
     }
 
     // TODO: 駒を取る処理や成る処理などを追加する可能性があります
@@ -593,6 +649,45 @@ class _BoardState extends State<Board> {
       selectedRow = -1;
       selectedCol = -1;
     });
+  }
+
+  ShogiPieceType getPromotedPieceType(ShogiPieceType type) {
+    switch (type) {
+      case ShogiPieceType.hohei:
+        return ShogiPieceType.promotedHohei;
+      case ShogiPieceType.kyousya:
+        return ShogiPieceType.promotedKyousya;
+      case ShogiPieceType.keima:
+        return ShogiPieceType.promotedKeima;
+      case ShogiPieceType.ginsho:
+        return ShogiPieceType.promotedGinsho;
+      case ShogiPieceType.kakugyo:
+        return ShogiPieceType.promotedKakugyo;
+      case ShogiPieceType.hisya:
+        return ShogiPieceType.promotedHisya;
+      // 他の駒の成り判定も追加
+      default:
+        return type;
+    }
+  }
+
+  String getPromotedPieceURL(String imageUrl) {
+    switch (imageUrl) {
+      case 'assets/image/huhei.png':
+        return 'assets/image/promotedHohei.png';
+      case 'assets/image/kyousya.png':
+        return 'assets/image/promotedKyousya.png';
+      case 'assets/image/keima.png':
+        return 'assets/image/promotedKeima.png';
+      case 'assets/image/ginsho.png':
+        return 'assets/image/promotedGinsho.png';
+      case 'assets/image/kakugyo.png':
+        return 'assets/image/promotedKakugyo.png';
+      case 'assets/image/hisya.png':
+        return 'assets/image/promotedHisya.png';
+      default:
+        return imageUrl;
+    }
   }
 
   @override
