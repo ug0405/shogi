@@ -36,47 +36,47 @@ class _BoardState extends State<Board> {
     [
       ShogiPiece(
           name: '香車',
-          imageUrl: 'assets/image/kyousya.png',
+          imagePath: 'assets/image/kyousya.png',
           isAlly: false,
           type: ShogiPieceType.kyousya),
       ShogiPiece(
           name: '桂馬',
-          imageUrl: 'assets/image/kyousya.png',
+          imagePath: 'assets/image/kyousya.png',
           isAlly: false,
           type: ShogiPieceType.keima),
       ShogiPiece(
           name: '銀将',
-          imageUrl: 'assets/image/ginsho.png',
+          imagePath: 'assets/image/ginsho.png',
           isAlly: false,
           type: ShogiPieceType.ginsho),
       ShogiPiece(
           name: '金将',
-          imageUrl: 'assets/image/kinsho.png',
+          imagePath: 'assets/image/kinsho.png',
           isAlly: false,
           type: ShogiPieceType.kinsho),
       ShogiPiece(
           name: '玉将',
-          imageUrl: 'assets/image/gyokusho.png',
+          imagePath: 'assets/image/gyokusho.png',
           isAlly: false,
           type: ShogiPieceType.gyokusho),
       ShogiPiece(
           name: '金将',
-          imageUrl: 'assets/image/kinsho.png',
+          imagePath: 'assets/image/kinsho.png',
           isAlly: false,
           type: ShogiPieceType.kinsho),
       ShogiPiece(
           name: '銀将',
-          imageUrl: 'assets/image/ginsho.png',
+          imagePath: 'assets/image/ginsho.png',
           isAlly: false,
           type: ShogiPieceType.ginsho),
       ShogiPiece(
           name: '桂馬',
-          imageUrl: 'assets/image/keima.png',
+          imagePath: 'assets/image/keima.png',
           isAlly: false,
           type: ShogiPieceType.keima),
       ShogiPiece(
           name: '香車',
-          imageUrl: 'assets/image/kyousya.png',
+          imagePath: 'assets/image/kyousya.png',
           isAlly: false,
           type: ShogiPieceType.kyousya)
     ],
@@ -84,7 +84,7 @@ class _BoardState extends State<Board> {
       null,
       ShogiPiece(
           name: '飛車',
-          imageUrl: 'assets/image/hisya.png',
+          imagePath: 'assets/image/hisya.png',
           isAlly: false,
           type: ShogiPieceType.hisya),
       null,
@@ -94,7 +94,7 @@ class _BoardState extends State<Board> {
       null,
       ShogiPiece(
           name: '角行',
-          imageUrl: 'assets/image/kakugyo.png',
+          imagePath: 'assets/image/kakugyo.png',
           isAlly: false,
           type: ShogiPieceType.kakugyo),
       null
@@ -102,47 +102,47 @@ class _BoardState extends State<Board> {
     [
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: false,
           type: ShogiPieceType.hohei),
     ],
@@ -152,47 +152,47 @@ class _BoardState extends State<Board> {
     [
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
       ShogiPiece(
           name: '歩',
-          imageUrl: 'assets/image/huhei.png',
+          imagePath: 'assets/image/huhei.png',
           isAlly: true,
           type: ShogiPieceType.hohei),
     ],
@@ -200,7 +200,7 @@ class _BoardState extends State<Board> {
       null,
       ShogiPiece(
           name: '角行',
-          imageUrl: 'assets/image/kakugyo.png',
+          imagePath: 'assets/image/kakugyo.png',
           isAlly: true,
           type: ShogiPieceType.kakugyo),
       null,
@@ -210,7 +210,7 @@ class _BoardState extends State<Board> {
       null,
       ShogiPiece(
           name: '飛車',
-          imageUrl: 'assets/image/hisya.png',
+          imagePath: 'assets/image/hisya.png',
           isAlly: true,
           type: ShogiPieceType.hisya),
       null
@@ -218,47 +218,47 @@ class _BoardState extends State<Board> {
     [
       ShogiPiece(
           name: '香車',
-          imageUrl: 'assets/image/kyousya.png',
+          imagePath: 'assets/image/kyousya.png',
           isAlly: true,
           type: ShogiPieceType.kyousya),
       ShogiPiece(
           name: '桂馬',
-          imageUrl: 'assets/image/keima.png',
+          imagePath: 'assets/image/keima.png',
           isAlly: true,
           type: ShogiPieceType.keima),
       ShogiPiece(
           name: '銀将',
-          imageUrl: 'assets/image/ginsho.png',
+          imagePath: 'assets/image/ginsho.png',
           isAlly: true,
           type: ShogiPieceType.ginsho),
       ShogiPiece(
           name: '金将',
-          imageUrl: 'assets/image/kinsho.png',
+          imagePath: 'assets/image/kinsho.png',
           isAlly: true,
           type: ShogiPieceType.kinsho),
       ShogiPiece(
           name: '王将',
-          imageUrl: 'assets/image/ousho.png',
+          imagePath: 'assets/image/ousho.png',
           isAlly: true,
           type: ShogiPieceType.ousho),
       ShogiPiece(
           name: '金将',
-          imageUrl: 'assets/image/kinsho.png',
+          imagePath: 'assets/image/kinsho.png',
           isAlly: true,
           type: ShogiPieceType.kinsho),
       ShogiPiece(
           name: '銀将',
-          imageUrl: 'assets/image/ginsho.png',
+          imagePath: 'assets/image/ginsho.png',
           isAlly: true,
           type: ShogiPieceType.ginsho),
       ShogiPiece(
           name: '桂馬',
-          imageUrl: 'assets/image/keima.png',
+          imagePath: 'assets/image/keima.png',
           isAlly: true,
           type: ShogiPieceType.keima),
       ShogiPiece(
           name: '香車',
-          imageUrl: 'assets/image/kyousya.png',
+          imagePath: 'assets/image/kyousya.png',
           isAlly: true,
           type: ShogiPieceType.kyousya)
     ],
@@ -272,6 +272,7 @@ class _BoardState extends State<Board> {
   bool isPieceSelected = false;
   int selectedRow = -1;
   int selectedCol = -1;
+  //ShogiPiece? selectedTakenPiece; // 選択された取った駒
   List<List<int>> moveRange = [];
   List<List<int>> calculateMoveRange(int row, int col, ShogiPiece piece) {
     List<List<int>> candidateMoves = [];
@@ -729,21 +730,19 @@ class _BoardState extends State<Board> {
         if (takenPiece.canPromote) {
           takenPiece = ShogiPiece(
             name: takenPiece.name,
-            imageUrl: getOriginalPieceURL(takenPiece.imageUrl),
+            imagePath: getOriginalPiecePath(takenPiece.imagePath),
             isAlly: takenPiece.isAlly,
             type: getOriginalPieceType(takenPiece.type), // 成る前の駒のタイプに戻す処理が必要
             canPromote: false,
           );
         }
-        // 相手の駒を取る場合の処理
-        //takenPieces.add(takenPiece);
-        // 相手の駒を取る場合の処理
+        // 駒を取る場合の処理
         if (piece.isAlly) {
           allyTakenPieces.add(takenPiece);
         } else {
           enemyTakenPieces.add(takenPiece);
         }
-        print("Taken piece: ${takenPiece.name}, ${takenPiece.imageUrl}");
+        print("Taken piece: ${takenPiece.name}, ${takenPiece.imagePath}");
 
         // 相手の駒をボード上から削除
         shogiBoard[toRow][toCol] = null;
@@ -770,7 +769,7 @@ class _BoardState extends State<Board> {
                   onPressed: () {
                     shogiBoard[toRow][toCol] = ShogiPiece(
                       name: piece.name,
-                      imageUrl: getPromotedPieceURL(piece.imageUrl),
+                      imagePath: getPromotedPiecePath(piece.imagePath),
                       isAlly: piece.isAlly,
                       type: getPromotedPieceType(piece.type),
                       canPromote: true,
@@ -827,6 +826,7 @@ class _BoardState extends State<Board> {
     });
   }
 
+  //駒のタイプを設定
   ShogiPieceType getPromotedPieceType(ShogiPieceType type) {
     switch (type) {
       case ShogiPieceType.hohei:
@@ -866,8 +866,9 @@ class _BoardState extends State<Board> {
     }
   }
 
-  String getPromotedPieceURL(String imageUrl) {
-    switch (imageUrl) {
+  //駒のパスを設定
+  String getPromotedPiecePath(String imagePath) {
+    switch (imagePath) {
       case 'assets/image/huhei.png':
         return 'assets/image/promotedHohei.png';
       case 'assets/image/kyousya.png':
@@ -881,12 +882,12 @@ class _BoardState extends State<Board> {
       case 'assets/image/hisya.png':
         return 'assets/image/promotedHisya.png';
       default:
-        return imageUrl;
+        return imagePath;
     }
   }
 
-  String getOriginalPieceURL(String imageUrl) {
-    switch (imageUrl) {
+  String getOriginalPiecePath(String imagePath) {
+    switch (imagePath) {
       case 'assets/image/promotedHohei.png':
         return 'assets/image/huhei.png';
       case 'assets/image/promotedKyousya.png':
@@ -900,7 +901,7 @@ class _BoardState extends State<Board> {
       case 'assets/image/promotedHisya.png':
         return 'assets/image/hisya.png';
       default:
-        return imageUrl;
+        return imagePath;
     }
   }
 
@@ -921,12 +922,12 @@ class _BoardState extends State<Board> {
                   itemCount: enemyTakenPieces.length,
                   itemBuilder: (context, index) {
                     print(
-                        "Taken piece index: $index, URL: ${enemyTakenPieces[index].imageUrl}");
+                        "Taken piece index: $index, URL: ${enemyTakenPieces[index].imagePath}");
                     return Container(
                       width: 50,
                       height: 50,
                       margin: EdgeInsets.all(5),
-                      child: Image.asset(enemyTakenPieces[index].imageUrl),
+                      child: Image.asset(enemyTakenPieces[index].imagePath),
                     );
                   },
                 ),
@@ -1011,7 +1012,7 @@ class _BoardState extends State<Board> {
                                         ? 0
                                         : math.pi), // 180度回転（縦方向と横方向の反転）
                                 child: Image.asset(
-                                  piece.imageUrl,
+                                  piece.imagePath,
                                   fit: BoxFit.contain,
                                 ),
                               )
@@ -1030,12 +1031,12 @@ class _BoardState extends State<Board> {
                   itemCount: allyTakenPieces.length,
                   itemBuilder: (context, index) {
                     print(
-                        "Taken piece index: $index, URL: ${allyTakenPieces[index].imageUrl}");
+                        "Taken piece index: $index, URL: ${allyTakenPieces[index].imagePath}");
                     return Container(
                       width: 50,
                       height: 50,
                       margin: EdgeInsets.all(5),
-                      child: Image.asset(allyTakenPieces[index].imageUrl),
+                      child: Image.asset(allyTakenPieces[index].imagePath),
                     );
                   },
                 ),
