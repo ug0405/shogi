@@ -952,6 +952,10 @@ class _BoardState extends State<Board> {
         body: Center(
           child: Column(
             children: [
+              const SizedBox(
+                height: 150,
+                // child: Text('あなたのターン'),
+              ), //
               //敵がとった駒の表示
               SizedBox(
                 height: 100, // 適宜調整
