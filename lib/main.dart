@@ -272,7 +272,7 @@ class _BoardState extends State<Board> {
   bool isPieceSelected = false;
   int selectedRow = -1;
   int selectedCol = -1;
-  //ShogiPiece? selectedTakenPiece; // 選択された取った駒
+  ShogiPiece? selectedTakenPiece; // 選択された取った駒
   List<List<int>> moveRange = [];
   List<List<int>> calculateMoveRange(int row, int col, ShogiPiece piece) {
     List<List<int>> candidateMoves = [];
@@ -1030,13 +1030,37 @@ class _BoardState extends State<Board> {
                   scrollDirection: Axis.horizontal,
                   itemCount: allyTakenPieces.length,
                   itemBuilder: (context, index) {
+                    ShogiPiece takenPiece = allyTakenPieces[index];
+                    bool isSelected = takenPiece == selectedTakenPiece;
                     print(
                         "Taken piece index: $index, URL: ${allyTakenPieces[index].imagePath}");
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.all(5),
-                      child: Image.asset(allyTakenPieces[index].imagePath),
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            selectedTakenPiece =
+                                null; // 選択された駒が再度タップされたらハイライトを解除
+                          } else {
+                            selectedTakenPiece = takenPiece;
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color:
+                                isSelected ? Colors.blue : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Image.asset(
+                          takenPiece.imagePath,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     );
                   },
                 ),
