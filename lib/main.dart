@@ -731,8 +731,16 @@ class _BoardState extends State<Board> {
           takenPiece = ShogiPiece(
             name: takenPiece.name,
             imagePath: getOriginalPiecePath(takenPiece.imagePath),
-            isAlly: takenPiece.isAlly,
+            isAlly: takenPiece.isAlly == true ? false : true,
             type: getOriginalPieceType(takenPiece.type), // 成る前の駒のタイプに戻す処理が必要
+            canPromote: false,
+          );
+        } else {
+          takenPiece = ShogiPiece(
+            name: takenPiece.name,
+            imagePath: takenPiece.imagePath,
+            isAlly: takenPiece.isAlly == true ? false : true,
+            type: takenPiece.type, // 成る前の駒のタイプに戻す処理が必要
             canPromote: false,
           );
         }
@@ -905,6 +913,36 @@ class _BoardState extends State<Board> {
     }
   }
 
+  // 盤面の表示部分の itemBuilder 内で、選択中の駒を置く処理を実装
+  void placeSelectedPiece(int row, int col) {
+    if (!canPlacePiece(row, col)) {
+      // 駒を置けるかどうかの判定
+      shogiBoard[row][col] = selectedTakenPiece;
+
+      if (selectedTakenPiece!.isAlly) {
+        allyTakenPieces.remove(selectedTakenPiece); // 選択した駒をリストから削除
+      } else {
+        enemyTakenPieces.remove(selectedTakenPiece); // 選択した駒をリストから削除
+      }
+      setState(() {
+        selectedTakenPiece = null; // 選択中の駒をリセット
+        moveRange = [];
+      });
+    }
+  }
+
+// 駒を置けるかどうかを判定する関数
+  bool canPlacePiece(int row, int col) {
+    bool canPlace =
+        moveRange.any((coord) => coord[0] == row && coord[1] == col) &&
+            shogiBoard[row][col] == null &&
+            selectedTakenPiece != null;
+
+    print("canPlacePiece: row=$row, col=$col, canPlace=$canPlace");
+
+    return canPlace;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -916,18 +954,42 @@ class _BoardState extends State<Board> {
             children: [
               //敵がとった駒の表示
               SizedBox(
-                height: 250, // 適宜調整
+                height: 100, // 適宜調整
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: enemyTakenPieces.length,
                   itemBuilder: (context, index) {
+                    ShogiPiece takenPiece = enemyTakenPieces[index];
+                    bool isSelected = takenPiece == selectedTakenPiece;
                     print(
                         "Taken piece index: $index, URL: ${enemyTakenPieces[index].imagePath}");
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.all(5),
-                      child: Image.asset(enemyTakenPieces[index].imagePath),
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            selectedTakenPiece =
+                                null; // 選択された駒が再度タップされたらハイライトを解除
+                          } else {
+                            selectedTakenPiece = takenPiece;
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color:
+                                isSelected ? Colors.blue : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Image.asset(
+                          takenPiece.imagePath,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -960,10 +1022,6 @@ class _BoardState extends State<Board> {
                             });
                           } else {
                             // 移動先のマスに駒を移動
-                            // shogiBoard[row][col] =
-                            //     shogiBoard[selectedRow][selectedCol];
-                            // shogiBoard[selectedRow][selectedCol] = null;
-
                             movePiece(selectedRow, selectedCol, row, col);
                             setState(() {
                               isPieceSelected = false;
@@ -980,6 +1038,12 @@ class _BoardState extends State<Board> {
                             // 選択された駒の移動範囲を計算
                             moveRange = calculateMoveRange(row, col, piece);
                           });
+                        }
+
+                        if (selectedTakenPiece != null) {
+                          placeSelectedPiece(row, col); // 選択中の駒を盤面に置く処理
+                        } else {
+                          // 通常の駒の移動処理を実装（移動範囲のチェックなど）
                         }
                       },
                       child: Container(
