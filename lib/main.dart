@@ -263,7 +263,12 @@ class _BoardState extends State<Board> {
           type: ShogiPieceType.kyousya)
     ],
   ];
-
+  // 相手の駒を取るためのリストを宣言
+  List<ShogiPiece> takenPieces = [];
+  //敵のコマのリスト
+  List<ShogiPiece> enemyTakenPieces = [];
+  //味方の駒のリスト
+  List<ShogiPiece> allyTakenPieces = [];
   bool isPieceSelected = false;
   int selectedRow = -1;
   int selectedCol = -1;
@@ -716,6 +721,35 @@ class _BoardState extends State<Board> {
 
     // ハイライトされている場合のみ移動を許可
     if (piece != null && isHighlightedMove) {
+      // 駒を取る処理を追加
+
+      ShogiPiece? takenPiece = shogiBoard[toRow][toCol];
+      if (takenPiece != null && takenPiece.isAlly != piece.isAlly) {
+        // 成り駒であれば、元の駒に戻す
+        if (takenPiece.canPromote) {
+          takenPiece = ShogiPiece(
+            name: takenPiece.name,
+            imageUrl: getOriginalPieceURL(takenPiece.imageUrl),
+            isAlly: takenPiece.isAlly,
+            type: getOriginalPieceType(takenPiece.type), // 成る前の駒のタイプに戻す処理が必要
+            canPromote: false,
+          );
+        }
+        // 相手の駒を取る場合の処理
+        //takenPieces.add(takenPiece);
+        // 相手の駒を取る場合の処理
+        if (piece.isAlly) {
+          allyTakenPieces.add(takenPiece);
+        } else {
+          enemyTakenPieces.add(takenPiece);
+        }
+        print("Taken piece: ${takenPiece.name}, ${takenPiece.imageUrl}");
+
+        // 相手の駒をボード上から削除
+        shogiBoard[toRow][toCol] = null;
+        // ここで必要な処理を実装してください
+      }
+
 // 成るかどうかの条件判定
       if ((toRow <= 2 && piece.isAlly || toRow >= 6 && !piece.isAlly) &&
           !piece.canPromote &&
@@ -739,6 +773,7 @@ class _BoardState extends State<Board> {
                       imageUrl: getPromotedPieceURL(piece.imageUrl),
                       isAlly: piece.isAlly,
                       type: getPromotedPieceType(piece.type),
+                      canPromote: true,
                     );
 
                     shogiBoard[fromRow][fromCol] = null;
@@ -812,6 +847,25 @@ class _BoardState extends State<Board> {
     }
   }
 
+  ShogiPieceType getOriginalPieceType(ShogiPieceType promotedType) {
+    switch (promotedType) {
+      case ShogiPieceType.promotedHohei:
+        return ShogiPieceType.hohei;
+      case ShogiPieceType.promotedHisya:
+        return ShogiPieceType.hisya;
+      case ShogiPieceType.promotedKyousya:
+        return ShogiPieceType.kyousya;
+      case ShogiPieceType.promotedKeima:
+        return ShogiPieceType.keima;
+      case ShogiPieceType.promotedGinsho:
+        return ShogiPieceType.ginsho;
+      case ShogiPieceType.promotedKakugyo:
+        return ShogiPieceType.kakugyo;
+      default:
+        return promotedType; // 成り駒でない場合はそのまま返す
+    }
+  }
+
   String getPromotedPieceURL(String imageUrl) {
     switch (imageUrl) {
       case 'assets/image/huhei.png':
@@ -831,104 +885,163 @@ class _BoardState extends State<Board> {
     }
   }
 
+  String getOriginalPieceURL(String imageUrl) {
+    switch (imageUrl) {
+      case 'assets/image/promotedHohei.png':
+        return 'assets/image/huhei.png';
+      case 'assets/image/promotedKyousya.png':
+        return 'assets/image/kyousya.png';
+      case 'assets/image/promotedKeima.png':
+        return 'assets/image/keima.png';
+      case 'assets/image/promotedGinsho.png':
+        return 'assets/image/ginsho.png';
+      case 'assets/image/promotedKakugyo.png':
+        return 'assets/image/kakugyo.png';
+      case 'assets/image/promotedHisya.png':
+        return 'assets/image/hisya.png';
+      default:
+        return imageUrl;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('将棋'),
-      ),
-      body: Center(
-        child: Container(
-          width: 300,
-          height: 300,
-          color: Color(0xFFD2B48C), // 薄めの茶色の背景色
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: cols,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              int row = index ~/ cols;
-              int col = index % cols;
-              Color color = const Color.fromARGB(255, 211, 136, 38);
-              ShogiPiece? piece = shogiBoard[row][col];
-              bool isHighlighted =
-                  moveRange.any((coord) => coord[0] == row && coord[1] == col);
-              return GestureDetector(
-                onTap: () {
-                  if (isPieceSelected) {
-                    if (selectedRow == row && selectedCol == col) {
-                      // 同じマスを再度タップした場合、選択を解除
-                      setState(() {
-                        isPieceSelected = false;
-                        selectedRow = -1;
-                        selectedCol = -1;
-                      });
-                    } else {
-                      // 移動先のマスに駒を移動
-                      // shogiBoard[row][col] =
-                      //     shogiBoard[selectedRow][selectedCol];
-                      // shogiBoard[selectedRow][selectedCol] = null;
-
-                      movePiece(selectedRow, selectedCol, row, col);
-                      setState(() {
-                        isPieceSelected = false;
-                        selectedRow = -1;
-                        selectedCol = -1;
-                      });
-                    }
-                  } else if (piece != null) {
-                    setState(() {
-                      isPieceSelected = true;
-                      selectedRow = row;
-                      selectedCol = col;
-
-                      // 選択された駒の移動範囲を計算
-                      moveRange = calculateMoveRange(row, col, piece);
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: (isHighlighted && isPieceSelected)
-                        ? Colors.green
-                        : color,
-                    border: Border.all(
-                      color: Colors.black, // 黒い線の色
-                      width: 1.0, // 線の太さ
-                    ),
-                    boxShadow: isPieceSelected &&
-                            selectedRow == row &&
-                            selectedCol == col
-                        ? [
-                            BoxShadow(
-                              color: Colors.blue.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 10,
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: piece != null
-                      ? Transform(
-                          alignment: Alignment.center,
-                          transform:
-                              Matrix4.rotationX(piece.isAlly ? 0 : math.pi) *
-                                  Matrix4.rotationY(piece.isAlly
-                                      ? 0
-                                      : math.pi), // 180度回転（縦方向と横方向の反転）
-                          child: Image.asset(
-                            piece.imageUrl,
-                            fit: BoxFit.contain,
-                          ),
-                        )
-                      : const Center(child: Text("")),
-                ),
-              );
-            },
-            itemCount: rows * cols,
-          ),
+        appBar: AppBar(
+          title: Text('将棋'),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            children: [
+              //敵がとった駒の表示
+              SizedBox(
+                height: 250, // 適宜調整
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: enemyTakenPieces.length,
+                  itemBuilder: (context, index) {
+                    print(
+                        "Taken piece index: $index, URL: ${enemyTakenPieces[index].imageUrl}");
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      margin: EdgeInsets.all(5),
+                      child: Image.asset(enemyTakenPieces[index].imageUrl),
+                    );
+                  },
+                ),
+              ),
+              //盤面の表示
+              Container(
+                width: 300,
+                height: 300,
+                color: Color(0xFFD2B48C), // 薄めの茶色の背景色
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: cols,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    int row = index ~/ cols;
+                    int col = index % cols;
+                    Color color = const Color.fromARGB(255, 211, 136, 38);
+                    ShogiPiece? piece = shogiBoard[row][col];
+                    bool isHighlighted = moveRange
+                        .any((coord) => coord[0] == row && coord[1] == col);
+                    return GestureDetector(
+                      onTap: () {
+                        if (isPieceSelected) {
+                          if (selectedRow == row && selectedCol == col) {
+                            // 同じマスを再度タップした場合、選択を解除
+                            setState(() {
+                              isPieceSelected = false;
+                              selectedRow = -1;
+                              selectedCol = -1;
+                            });
+                          } else {
+                            // 移動先のマスに駒を移動
+                            // shogiBoard[row][col] =
+                            //     shogiBoard[selectedRow][selectedCol];
+                            // shogiBoard[selectedRow][selectedCol] = null;
+
+                            movePiece(selectedRow, selectedCol, row, col);
+                            setState(() {
+                              isPieceSelected = false;
+                              selectedRow = -1;
+                              selectedCol = -1;
+                            });
+                          }
+                        } else if (piece != null) {
+                          setState(() {
+                            isPieceSelected = true;
+                            selectedRow = row;
+                            selectedCol = col;
+
+                            // 選択された駒の移動範囲を計算
+                            moveRange = calculateMoveRange(row, col, piece);
+                          });
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: (isHighlighted && isPieceSelected)
+                              ? Colors.green
+                              : color,
+                          border: Border.all(
+                            color: Colors.black, // 黒い線の色
+                            width: 1.0, // 線の太さ
+                          ),
+                          boxShadow: isPieceSelected &&
+                                  selectedRow == row &&
+                                  selectedCol == col
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.blue.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 10,
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: piece != null
+                            ? Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.rotationX(
+                                        piece.isAlly ? 0 : math.pi) *
+                                    Matrix4.rotationY(piece.isAlly
+                                        ? 0
+                                        : math.pi), // 180度回転（縦方向と横方向の反転）
+                                child: Image.asset(
+                                  piece.imageUrl,
+                                  fit: BoxFit.contain,
+                                ),
+                              )
+                            : const Center(child: Text("")),
+                      ),
+                    );
+                  },
+                  itemCount: rows * cols,
+                ),
+              ),
+              // 自分がとった駒の表示
+              SizedBox(
+                height: 100, // 適宜調整
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: allyTakenPieces.length,
+                  itemBuilder: (context, index) {
+                    print(
+                        "Taken piece index: $index, URL: ${allyTakenPieces[index].imageUrl}");
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      margin: EdgeInsets.all(5),
+                      child: Image.asset(allyTakenPieces[index].imageUrl),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
