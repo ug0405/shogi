@@ -915,8 +915,7 @@ class _BoardState extends State<Board> {
 
   // 盤面の表示部分の itemBuilder 内で、選択中の駒を置く処理を実装
   void placeSelectedPiece(int row, int col) {
-    if (!canPlacePiece(row, col)) {
-      // 駒を置けるかどうかの判定
+    if (canPlacePiece(row, col)) {
       shogiBoard[row][col] = selectedTakenPiece;
 
       if (selectedTakenPiece!.isAlly) {
@@ -928,15 +927,47 @@ class _BoardState extends State<Board> {
         selectedTakenPiece = null; // 選択中の駒をリセット
         moveRange = [];
       });
+    } else if (!canPlacePiece(row, col)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('2歩は禁止です'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
-// 駒を置けるかどうかを判定する関数
   bool canPlacePiece(int row, int col) {
+    bool hasSameDirectionPawn = false;
+
+    // 同じ列に同じ方向の歩が存在するかチェック
+    if (selectedTakenPiece!.type == ShogiPieceType.hohei) {
+      for (int r = 8; r >= 0; r--) {
+        ShogiPiece? piece = shogiBoard[r][col];
+        if (piece != null &&
+            piece.type == ShogiPieceType.hohei &&
+            piece.isAlly == selectedTakenPiece!.isAlly) {
+          hasSameDirectionPawn = true;
+          break;
+        }
+      }
+    }
+    //
     bool canPlace =
-        moveRange.any((coord) => coord[0] == row && coord[1] == col) &&
-            shogiBoard[row][col] == null &&
-            selectedTakenPiece != null;
+        // moveRange.any((coord) => coord[0] == row && coord[1] == col) &&
+        shogiBoard[row][col] == null &&
+            selectedTakenPiece != null &&
+            !hasSameDirectionPawn;
 
     print("canPlacePiece: row=$row, col=$col, canPlace=$canPlace");
 
