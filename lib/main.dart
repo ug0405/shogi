@@ -978,7 +978,7 @@ class _BoardState extends State<Board> {
   }
 
   bool isCheck() {
-    // 現在のプレイヤーの玉の位置を取得
+    // 現在のプレイヤーの王または玉の位置を取得
     int kingRow = -1;
     int kingCol = -1;
     for (int r = 0; r < rows; r++) {
@@ -998,7 +998,7 @@ class _BoardState extends State<Board> {
       }
     }
 
-    // 相手の駒が玉に利いているか判定
+    // 駒の移動範囲に王または玉がいるかを判定
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         ShogiPiece? piece = shogiBoard[r][c];
@@ -1011,7 +1011,6 @@ class _BoardState extends State<Board> {
         }
       }
     }
-
     return false; // 王手ではない
   }
 
@@ -1056,7 +1055,7 @@ class _BoardState extends State<Board> {
                       child: Container(
                         width: 50,
                         height: 50,
-                        margin: EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color:
@@ -1077,7 +1076,7 @@ class _BoardState extends State<Board> {
               Container(
                 width: 300,
                 height: 300,
-                color: Color(0xFFD2B48C), // 薄めの茶色の背景色
+                color: const Color(0xFFD2B48C), // 薄めの茶色の背景色
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: cols,
@@ -1213,8 +1212,8 @@ class _BoardState extends State<Board> {
                   itemBuilder: (context, index) {
                     ShogiPiece takenPiece = allyTakenPieces[index];
                     bool isSelected = takenPiece == selectedTakenPiece;
-                    print(
-                        "Taken piece index: $index, URL: ${allyTakenPieces[index].imagePath}");
+                    // print(
+                    //     "Taken piece index: $index, URL: ${allyTakenPieces[index].imagePath}");
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -1229,7 +1228,7 @@ class _BoardState extends State<Board> {
                       child: Container(
                         width: 50,
                         height: 50,
-                        margin: EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color:
