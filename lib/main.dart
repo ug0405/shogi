@@ -928,6 +928,8 @@ class _BoardState extends State<Board> {
         selectedTakenPiece = null; // 選択中の駒をリセット
         moveRange = [];
       });
+      // ターンを切り替える
+      switchTurn();
     } else if (!canPlacePiece(row, col)) {
       showDialog(
         context: context,
@@ -1114,8 +1116,6 @@ class _BoardState extends State<Board> {
                             (!isPlayer1Turn &&
                                 selectedTakenPiece?.isAlly == false)) {
                           placeSelectedPiece(row, col);
-                          // ターンを切り替える
-                          switchTurn();
                         }
                       },
                       child: Container(
