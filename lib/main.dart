@@ -270,6 +270,7 @@ class _BoardState extends State<Board> {
   //味方の駒のリスト
   List<ShogiPiece> allyTakenPieces = [];
   bool isPieceSelected = false;
+  bool isPlayer1Turn = true; // プレイヤー1のターンかどうかを管理するフラグ
   int selectedRow = -1;
   int selectedCol = -1;
   ShogiPiece? selectedTakenPiece; // 選択された取った駒
@@ -974,18 +975,21 @@ class _BoardState extends State<Board> {
     return canPlace;
   }
 
+  void switchTurn() {
+    isPlayer1Turn = !isPlayer1Turn; // ターンを切り替える
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('将棋'),
+          title: Text(isPlayer1Turn ? 'Player 1のターン' : 'Player 2のターン'),
         ),
         body: Center(
           child: Column(
             children: [
               const SizedBox(
                 height: 150,
-                // child: Text('あなたのターン'),
               ), //
               //敵がとった駒の表示
               SizedBox(
@@ -1047,38 +1051,71 @@ class _BoardState extends State<Board> {
                         .any((coord) => coord[0] == row && coord[1] == col);
                     return GestureDetector(
                       onTap: () {
-                        if (isPieceSelected) {
-                          if (selectedRow == row && selectedCol == col) {
-                            // 同じマスを再度タップした場合、選択を解除
+                        //Player1はisAlly=trueの駒を動かせる
+                        if ((isPlayer1Turn && piece?.isAlly == true) ||
+                            (!isPlayer1Turn && piece?.isAlly == false)) {
+                          if (isPieceSelected) {
+                            if (selectedRow == row && selectedCol == col) {
+                              // 同じマスを再度タップした場合、選択を解除
+                              setState(() {
+                                isPieceSelected = false;
+                                selectedRow = -1;
+                                selectedCol = -1;
+                              });
+                            } else {
+                              // 駒の移動処理
+                              if ((isPlayer1Turn && piece?.isAlly == true) ||
+                                  (!isPlayer1Turn && piece?.isAlly == false)) {}
+                              movePiece(selectedRow, selectedCol, row, col);
+                              setState(() {
+                                isPieceSelected = false;
+                                selectedRow = -1;
+                                selectedCol = -1;
+                              });
+
+                              // ターンを切り替える
+                              switchTurn();
+                            }
+                          } else if (piece != null) {
                             setState(() {
-                              isPieceSelected = false;
-                              selectedRow = -1;
-                              selectedCol = -1;
+                              isPieceSelected = true;
+                              selectedRow = row;
+                              selectedCol = col;
+
+                              // 選択された駒の移動範囲を計算
+                              moveRange = calculateMoveRange(row, col, piece);
                             });
-                          } else {
-                            // 移動先のマスに駒を移動
+                            // }
+                          }
+                          //選択した駒の移動処理
+                        } else if (((isPlayer1Turn &&
+                                isPieceSelected &&
+                                (piece?.isAlly == null ||
+                                    piece?.isAlly == false)) ||
+                            (!isPlayer1Turn &&
+                                isPieceSelected &&
+                                (piece?.isAlly == null ||
+                                    piece?.isAlly == true)))) {
+                          if (moveRange.any(
+                              (coord) => coord[0] == row && coord[1] == col)) {
                             movePiece(selectedRow, selectedCol, row, col);
                             setState(() {
                               isPieceSelected = false;
                               selectedRow = -1;
                               selectedCol = -1;
                             });
+                            // ターンを切り替える
+                            switchTurn();
                           }
-                        } else if (piece != null) {
-                          setState(() {
-                            isPieceSelected = true;
-                            selectedRow = row;
-                            selectedCol = col;
-
-                            // 選択された駒の移動範囲を計算
-                            moveRange = calculateMoveRange(row, col, piece);
-                          });
-                        }
-
-                        if (selectedTakenPiece != null) {
-                          placeSelectedPiece(row, col); // 選択中の駒を盤面に置く処理
-                        } else {
-                          // 通常の駒の移動処理を実装（移動範囲のチェックなど）
+                          // 取った駒の配置処理
+                        } else if (selectedTakenPiece != null &&
+                                (isPlayer1Turn &&
+                                    selectedTakenPiece?.isAlly == true) ||
+                            (!isPlayer1Turn &&
+                                selectedTakenPiece?.isAlly == false)) {
+                          placeSelectedPiece(row, col);
+                          // ターンを切り替える
+                          switchTurn();
                         }
                       },
                       child: Container(
