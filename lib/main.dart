@@ -977,6 +977,44 @@ class _BoardState extends State<Board> {
     return canPlace;
   }
 
+  bool isCheck() {
+    // 現在のプレイヤーの玉の位置を取得
+    int kingRow = -1;
+    int kingCol = -1;
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        ShogiPiece? piece = shogiBoard[r][c];
+        if (piece != null &&
+            (piece.type == ShogiPieceType.gyokusho ||
+                piece.type == ShogiPieceType.ousho) &&
+            piece.isAlly == isPlayer1Turn) {
+          kingRow = r;
+          kingCol = c;
+          break;
+        }
+      }
+      if (kingRow != -1) {
+        break;
+      }
+    }
+
+    // 相手の駒が玉に利いているか判定
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        ShogiPiece? piece = shogiBoard[r][c];
+        if (piece != null && piece.isAlly != isPlayer1Turn) {
+          List<List<int>> moveRange = calculateMoveRange(r, c, piece);
+          if (moveRange
+              .any((coord) => coord[0] == kingRow && coord[1] == kingCol)) {
+            return true; // 王手がかかっている
+          }
+        }
+      }
+    }
+
+    return false; // 王手ではない
+  }
+
   void switchTurn() {
     isPlayer1Turn = !isPlayer1Turn; // ターンを切り替える
   }
@@ -1064,21 +1102,28 @@ class _BoardState extends State<Board> {
                                 selectedRow = -1;
                                 selectedCol = -1;
                               });
-                            } else {
-                              // 駒の移動処理
-                              if ((isPlayer1Turn && piece?.isAlly == true) ||
-                                  (!isPlayer1Turn && piece?.isAlly == false)) {}
-                              movePiece(selectedRow, selectedCol, row, col);
-                              setState(() {
-                                isPieceSelected = false;
-                                selectedRow = -1;
-                                selectedCol = -1;
-                              });
-
-                              // ターンを切り替える
-                              switchTurn();
                             }
                           } else if (piece != null) {
+                            if (isCheck()) {
+                              // 王手の場合の処理
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('王手です'),
+                                    content: const Text('王手を回避してください。'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                             setState(() {
                               isPieceSelected = true;
                               selectedRow = row;
